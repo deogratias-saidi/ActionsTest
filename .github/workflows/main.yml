@@ -1,13 +1,14 @@
 name: CI + CD
 
 on:
-  push: branch [ main ]
+  push: 
+    branches: [ main ]
   pull_request:
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntub-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,7 +20,8 @@ jobs:
     name: Deploy to Dev
     if: github.event_name == 'pull_request'
     needs: [Build]
-    environmenent:
+    runs-on: ubuntub-latest
+    environment:
       name: Development
       url: "http://dev.myapp.com"
     steps:
@@ -30,7 +32,8 @@ jobs:
     name: Deploy to Staging
     if: github.event_ref == 'refs/heads/main'
     needs: [Build]
-    environmenent:
+    runs-on: ubuntub-latest
+    environment:
       name: Staging
       url: "http://dev.myapp.com"
     steps:
@@ -40,7 +43,8 @@ jobs:
   DeployProd:
     name: Deploy to Production
     needs: [DeployStaging]
-    environmenent:
+    runs-on: ubuntub-latest
+    environment:
       name: Production
       url: "http://dev.myapp.com"
     steps:
